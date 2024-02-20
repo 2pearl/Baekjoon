@@ -61,6 +61,7 @@ public class Main {
 			}
 		}
 		
+		//res.size가 n이 아니면 위상정렬 실패
 
 		// 결과 출력
 		for (int i = 0; i < res.size(); i++)
