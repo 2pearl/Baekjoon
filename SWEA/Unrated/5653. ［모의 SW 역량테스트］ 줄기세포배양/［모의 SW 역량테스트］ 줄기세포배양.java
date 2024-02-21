@@ -29,14 +29,14 @@ public class Solution {
 
 		@Override
 		public int compareTo(Cell o) {
-			
+
 			if (this.status == ACTIVE && o.status == ACTIVE) {// 활성큐
 
 				// 시간 오름차순
 				return this.end - o.end;
 
 			} else {// 비활성화큐
-				
+
 				// 생명력 내림차순
 				return -(this.life - o.life);
 			}
@@ -72,7 +72,6 @@ public class Solution {
 			M = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());// 배양시간
 
-//			map = new int[2 * K + N][2 * K + M];
 			visited = new boolean[2 * K + N][2 * K + M];
 			inactive = new PriorityQueue<>();
 			active = new PriorityQueue<>();
@@ -90,7 +89,6 @@ public class Solution {
 						inactive.offer(new Cell(K + i, K + j, l, l, 2 * l, INACTIVE));
 					}
 				}
-
 			}
 
 			// 배양
@@ -98,15 +96,14 @@ public class Solution {
 
 				int n = inactive.size();
 
-				
 				while (true) {
 
 					if (n == 0)
 						break;
 
 					Cell cell = inactive.poll();
-					
-					if (cell.start+1 == k) {// 활성화 Time
+
+					if (cell.start + 1 == k) {// 활성화 Time
 
 						for (int d = 0; d < 4; d++) {
 							int r = cell.row + dr[d];
@@ -125,7 +122,7 @@ public class Solution {
 						active.offer(cell);
 					}
 
-					else {
+					else {// inactive하니까 다시 넣기
 						tmp.offer(cell);
 					}
 
