@@ -3,72 +3,57 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(System.out));
-		List<Integer>list=new ArrayList<>();
-		
-		int M=Integer.parseInt(br.readLine());
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		int M = Integer.parseInt(br.readLine());
+		int ans = 0;
+
 		StringTokenizer st;
-		StringBuilder sb=new StringBuilder();
-		for(int m=0;m<M;m++) {
+		
+		for (int m = 0; m < M; m++) {
+
+			st = new StringTokenizer(br.readLine());
+			String op = st.nextToken();
+			int n=0;
+			if(op.equals("add")||op.equals("remove")||op.equals("check")||op.equals("toggle"))
+				n = Integer.parseInt(st.nextToken());
 			
-			st=new StringTokenizer(br.readLine());
-			String inst=st.nextToken();
-			int n;
-			switch(inst) {
+			switch (op) {
 			case "add":
-				n=Integer.parseInt(st.nextToken());
-				if(!list.contains(n))
-					list.add(n);
+				ans |= (1 << n);
 				break;
 			case "remove":
-				n=Integer.parseInt(st.nextToken());
-				for(int i=list.size()-1;i>=0;i--) {
-					if(list.get(i)==n)
-						list.remove(i);
-				}
+				ans &= (~(1 << n));
 				break;
 			case "check":
-				n=Integer.parseInt(st.nextToken());
-				if(list.contains(n))
-					sb.append(1).append("\n");
-				else sb.append(0).append("\n");
+				if (((1 << n) & ans) > 0)
+					bw.write(1 + "\n");
+				else
+					bw.write(0 + "\n");
 				break;
 			case "toggle":
-				n=Integer.parseInt(st.nextToken());
-				if(list.contains(n)) {
-					for(int i=list.size()-1;i>=0;i--) {
-						if(list.get(i)==n)
-							list.remove(i);
-					}					
-				}
-				else {
-					list.add(n);
-				}
+				if(0<((1 << n) & ans))
+					ans &= (~(1 << n));
+				else
+					ans |= (1 << n);
 				break;
 			case "all":
-				list.clear();
-				for(int i=1;i<=20;i++)
-					list.add(i);
+				ans |= ((1 << 21) - 1);
 				break;
 			case "empty":
-				list.clear();
+				ans = 0;
 				break;
 			}
-			
 		}
-		bw.write(sb.toString());
 		bw.flush();
 		bw.close();
 		br.close();
 	}
-
 }
