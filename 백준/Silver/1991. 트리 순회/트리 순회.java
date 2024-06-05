@@ -1,122 +1,116 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class Main {
-	static class Node {
-		char data;
-		Node left;
-		Node right;
+    static StringBuilder sb;
 
-		Node(char data) {
-			this.data = data;
-			this.left = null;
-			this.right = null;
-		}
-	}
+    static class Node {
+        char data;
+        Node lchild;
+        Node rchild;
 
-	static class Tree {
-		static Node root;
+        Node(char data) {
+            this.data = data;
+            lchild = null;
+            rchild = null;
+        }
+    }
 
-		Tree() {
-			root = new Node('A');
-		}
+    static class Tree {
 
-		static void insert(char data, char left, char right) {
+        Node root;
 
-			Node node = new Node(data);
-			if (left != '.')
-				node.left = new Node(left);
-			if (right != '.')
-				node.right = new Node(right);
+        void insert(char data, char lchild, char rchild) {
+            Node newNode = new Node(data);
+            if (lchild != '.') {
+                newNode.lchild = new Node(lchild);
+            }
+            if (rchild != '.') {
+                newNode.rchild = new Node(rchild);
+            }
 
-			if (root == null) {
-				root = node;
-			} else {
-				Node tmp = root;
-				insertTo(tmp, node);
-			}
-		}
+            if (root == null) {
+                root = newNode;
+            } else {
+                Node tmp = root;
+                find(tmp, newNode);
+            }
 
-		static void insertTo(Node nowNode, Node newNode) {
-			if (nowNode == null)
-				return;
+        }
 
-			if (nowNode.data == newNode.data) {
-				nowNode.left = newNode.left;
-				nowNode.right = newNode.right;
-				return;
-			} else {
-				insertTo(nowNode.left, newNode);
-				insertTo(nowNode.right, newNode);
-			}
-		}
+        void find(Node now, Node find) {
+            if (now == null)
+                return;
+            if (now.data == find.data) {
 
-		static void pre(Node now) {
+                now.lchild = find.lchild;
+                now.rchild = find.rchild;
+                return;
+            } else {
+                find(now.lchild, find);
+                find(now.rchild, find);
+            }
+        }
 
-			sb.append(now.data);
-			if (now.left != null)
-				pre(now.left);
-			if (now.right != null)
-				pre(now.right);
-		}
+        void preOrder(Node now) {
+            sb.append(now.data);
+            if (now.lchild != null) {
+                preOrder(now.lchild);
+            }
+            if (now.rchild != null) {
+                preOrder(now.rchild);
+            }
+        }
 
-		static void in(Node now) {
+        void inOrder(Node now) {
+            if (now.lchild != null) {
+                inOrder(now.lchild);
+            }
+            sb.append(now.data);
+            if (now.rchild != null) {
+                inOrder(now.rchild);
+            }
+        }
 
-			if (now.left != null)
-				in(now.left);
-			sb.append(now.data);
-			if (now.right != null)
-				in(now.right);
-		}
+        void postOrder(Node now) {
+            if (now.lchild != null) {
+                postOrder(now.lchild);
+            }
+            if (now.rchild != null) {
+                postOrder(now.rchild);
+            }
+            sb.append(now.data);
+        }
+    }
 
-		static void post(Node now) {
+    public static void main(String[] args) throws IOException {
 
-			if (now.left != null)
-				post(now.left);
-			if (now.right != null)
-				post(now.right);
-			sb.append(now.data);
-		}
-	}
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-	static StringBuilder sb;
+        StringTokenizer st;
+        sb = new StringBuilder();
 
-	public static void main(String[] args) throws IOException {
+        Tree tree = new Tree();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int N = Integer.parseInt(br.readLine());
+        for (int t = 0; t < N; t++) {
+            st = new StringTokenizer(br.readLine());
 
-		StringTokenizer st;
-		sb = new StringBuilder();
+            char data = st.nextToken().charAt(0);
+            char lchild = st.nextToken().charAt(0);
+            char rchild = st.nextToken().charAt(0);
+            tree.insert(data, lchild, rchild);
+        }
 
-		int N = Integer.parseInt(br.readLine());
-		
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			char data = st.nextToken().charAt(0);
-			char left = st.nextToken().charAt(0);
-			char right = st.nextToken().charAt(0);
-
-			Tree.insert(data, left, right);
-		}
-
-		// 전위
-		Tree.pre(Tree.root);
-		sb.append("\n");
-		// 중위
-		Tree.in(Tree.root);
-		sb.append("\n");
-		// 후위
-		Tree.post(Tree.root);
-		
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
-		br.close();
-
-	}
+        tree.preOrder(tree.root);
+        sb.append("\n");
+        tree.inOrder(tree.root);
+        sb.append("\n");
+        tree.postOrder(tree.root);
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+        br.close();
+    }
 }
