@@ -1,39 +1,30 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int N = Integer.parseInt(br.readLine());
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
+        int c = 0;
+        while (N > 0) {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+            if (N % 5 == 0) {
+                c += N / 5;
+                break;
+            }
+            if (N < 3) {
+                c = -1;
+                break;
+            }
 
-		int N = Integer.parseInt(br.readLine());
+            c++;
+            N -= 3;
+        }
 
-		// 최소로
-		int cnt = 0;
-		while (N > 0) {
-
-			if (N % 5 == 0) {
-				cnt += N / 5;
-				break;
-			}
-			if (N < 3) {
-				cnt = -1;
-				break;
-			}
-
-			cnt += 1;
-			N -= 3;
-		}
-
-		bw.write(String.valueOf(cnt));
-		bw.flush();
-		bw.close();
-		br.close();
-	}
-
+        bw.write(String.valueOf(c));
+        bw.flush();
+        bw.close();
+        br.close();
+    }
 }
