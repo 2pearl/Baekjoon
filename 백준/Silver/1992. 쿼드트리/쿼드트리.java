@@ -1,67 +1,61 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 
 public class Main {
+    static int N;
+    static int[][] arr;
+    static StringBuilder sb;
 
-	static int N;
-	static int[][] input;
-	static StringBuilder sb;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N][N];
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		sb=new StringBuilder();
-		
-		N = Integer.parseInt(br.readLine());
+        for (int i = 0; i < N; i++) {
+            String str = br.readLine();
+            for (int j = 0; j < N; j++) {
+                arr[i][j] = str.charAt(j) - '0';
+            }
+        }//입력 끝
 
-		// 영상배열 입력
-		input = new int[N][N];
-		for (int i = 0; i < N; i++) {
-			String str = br.readLine();
-			for (int j = 0; j < N; j++)
-				input[i][j] = str.charAt(j) - '0';
-		}
+        sb = new StringBuilder();
+        dfs(0, 0, N);
 
-		divide(0, 0, N);
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+        br.close();
+    }
 
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
-		br.close();
-	}
+    public static void dfs(int r, int c, int d) {
 
-	public static void divide(int row, int col, int d) {
+        if (check(r, c, d)) {
+            sb.append(arr[r][c]);
+            return;
+        }
 
-		
-		// 압축된다면
-		if (check(row, col, d)) {
-			sb.append(input[row][col]);
-			return;
-		}
+        //아니면 더 나눠야함
+        int next = d / 2;
+        sb.append("(");
+        dfs(r, c, next);
+        dfs(r, c + next, next);
+        dfs(r + next, c, next);
+        dfs(r + next, c + next, next);
+        sb.append(")");
+    }
 
-		int next = d / 2;
-		sb.append("(");
-		divide(row, col, next);
-		divide(row, col + next, next);
-		divide(row + next, col, next);
-		divide(row + next, col + next, next);
-		sb.append(")");
-	}
+    //다 같은 숫자인지 확인하는 메서드
+    public static boolean check(int r, int c, int d) {
 
-	public static boolean check(int row, int col, int d) {
-
-		int color = input[row][col];
-		for (int i = row; i < row + d; i++) {
-			for (int j = col; j < col + d; j++) {
-				// 다른 색상이 존재
-				if (input[i][j] != color)
-					return false;
-			}
-		}
-		return true;
-	}
+        int fist = arr[r][c];
+        for (int i = r; i < r + d; i++) {
+            for (int j = c; j < c + d; j++) {
+                if (arr[i][j] != fist) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
