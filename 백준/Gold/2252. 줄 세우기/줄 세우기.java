@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -10,67 +6,54 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static ArrayList<Integer>[] list;
-	static ArrayList<Integer> res;
+    static int N, M;
+    static ArrayList<Integer>[] list;
+    static int[] in;
 
-	public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
+        list = new ArrayList[N + 1];
+        for (int i = 1; i <= N; i++)
+            list[i] = new ArrayList<>();
 
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+        in = new int[N + 1];
 
-		list = new ArrayList[N + 1];
-		res = new ArrayList<>();
-		int[] cnt = new int[N + 1];// 진입차수 관리
-		
-		
-		for (int i = 1; i < N + 1; i++)
-			list[i] = new ArrayList<>();
-		
-		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine());
-			int s = Integer.parseInt(st.nextToken());
-			int e = Integer.parseInt(st.nextToken());
-			list[s].add(e);// 단방향 그래프
-			
-			cnt[e]++;
-		}
-		Queue<Integer>queue=new ArrayDeque<>();
-		
-		// 위상정렬
-		
-		for (int i = 1; i < N + 1; i++) {
-			if(cnt[i]==0)//진입차수0인거 큐에 넣기
-				queue.offer(i);
-		}
-		
-		while(!queue.isEmpty()) {
-			
-			int v=queue.poll();
-			res.add(v);
-			
-			for(int i:list[v]) {
-				cnt[i]--;
-				if(cnt[i]==0)
-					queue.offer(i);
-			}
-		}
-		
-		//res.size가 n이 아니면 위상정렬 실패
+        for (int m = 0; m < M; m++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            list[a].add(b);
+            in[b]++;
+        }//입력끝
 
-		// 결과 출력
-		for (int i = 0; i < res.size(); i++)
-			sb.append(res.get(i)).append(" ");
-		
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
-		br.close();
-	}
+        Queue<Integer> queue = new ArrayDeque<>();
+        for (int i = 1; i < N + 1; i++) {
+            if (in[i] == 0)
+                queue.add(i);
+        }
 
+        while (!queue.isEmpty()) {
+            int v = queue.poll();
+            sb.append(v+" ");
+
+            for(int i: list[v]) {
+                in[i]--;
+                if(in[i] == 0) {
+                    queue.add(i);
+                }
+            }
+        }
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+        br.close();
+    }
 }
